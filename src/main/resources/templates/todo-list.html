@@ -63,34 +63,3 @@
 </div>
 </body>
 </html>
-
-<!--    <div th:each="task: ${tasks}" class="card">-->
-<!--        <div class="card-body">-->
-<!--            <div class="d-flex">-->
-<!--                <div>-->
-<!--                    <h5 class="card-title mb-0" th:text="${task.getDescription()}"/>-->
-<!--                    <p class="card-text text-muted" th:text="${task.getStatus()}"/>-->
-<!--                    &lt;!&ndash;                    <p class="card-text text-muted" th:text="${task.getId()}"/>&ndash;&gt;-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <p class="card-text align-right mt-3" th:text="${task.getId()}"/>-->
-<!--            <p class="card-text align-right mt-3" номер страницы th:text="${pageNumber}"/>-->
-<!--            <div class="d-flex justify-content-between align-items-center mt-3">-->
-<!--                <button class="btn btn-outline-primary"><i class="bi bi-heart"></i> Set Description</button>-->
-<!--                <button class="btn btn-outline-secondary"><i class="bi bi-chat"></i> Comment</button>-->
-<!--                <button class="btn btn-outline-danger"-->
-<!--                        th:hx-delete="@{/todo-list/tasks/{id}(id=${task.getId()})}"-->
-<!--                        hx-confirm="Are you sure, You want to delete this article?"-->
-<!--                        type="submit">-->
-<!--                    <i class="bi bi-trash"></i> Delete-->
-<!--                </button>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    <div class="card" id="replaceMe">-->
-<!--        <button-->
-<!--                class="btn btn-outline-primary"-->
-<!--                th:hx-get="@{/todo-list/tasks(pageSize=5,pageNumber=${pageNumber}+1)}"-->
-<!--                hx-swap="outerHTML"-->
-<!--                hx-target="#replaceMe">Load More...-->
-<!--        </button>-->

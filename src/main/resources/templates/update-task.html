@@ -18,7 +18,6 @@
     <input type="text" th:field="*{description}" id="description" placeholder="description">
     <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
     <label for="status">Status</label>
-    <!--    <input type="text" th:field="*{status}" id="status" placeholder="status">-->
     <select th:field="*{status}" id="status">
         <option th:value="'DONE'" th:text="DONE"></option>
         <option th:value="'IN_PROGRESS'" th:text="IN_PROGRESS"></option>
