@@ -27,7 +27,7 @@
         <tbody>
         <tr th:each="task: ${tasks}">
             <th scope="row" th:text="${task.id}"/>
-            <td th:text="${task.description}"><input type="text"></td>
+            <td th:text="${task.description}"/>
             <td th:text="${task.status}"/>
             <td>
                 <button type="button" class="btn btn-primary">
@@ -40,7 +40,7 @@
                 </button>
                 <button class="btn btn-danger" type="button">
                     <i class="far fa-trash-alt">
-                        <a th:href="@{/todo-list/delete/{id}(id=${task.getId()},pageNumber=${pageNumber})}"
+                        <a th:href="@{/todo-list/delete/{id}(id=${task.getId()},pageNumber=${pageNumber},tasksCount=${tasksCount})}"
                            class="link-light text-decoration-none">
                             Delete
                         </a>

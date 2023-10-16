@@ -4,6 +4,7 @@ package com.javarush.module5.lec19.todolist.controller;
 import com.javarush.module5.lec19.todolist.dto.TaskDto;
 import com.javarush.module5.lec19.todolist.exception.NothingToChangeExcpetion;
 import com.javarush.module5.lec19.todolist.service.TaskService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,9 +23,12 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @Controller
 @RequestMapping("/todo-list")
+@Hidden
 @Tag(name = "контроллер для таска", description = "crud для thymeleaf")
 public class TaskController {
     private final TaskService taskService;
+    private final static Integer DEFAUL_PAGE_SIZE = 5;
+    private final static String DEFAUL_SORT_BY = "id";
 
     @Autowired
     public TaskController(TaskService taskService) {
@@ -41,14 +45,15 @@ public class TaskController {
             @RequestParam(name = "pageSize", defaultValue = "5")
             @Min(value = 1, message = "The value must be 1 and greater") int pageSize,
             @Parameter(description = "сортировка параметров таска")
-            @RequestParam(name = "sortBy", defaultValue = "id")
+            @RequestParam(name = "sortBy", defaultValue = DEFAUL_SORT_BY)
             @Pattern(regexp = "(id|description|status)", message = "The value must be \"id\", or \"description\", or \"status\"") String sortBy,
             Model model) {
         Page<TaskDto> tasksPage = taskService.getTasksByPage(pageNumber, pageSize, sortBy);
-        System.out.println(tasksPage.getContent());
+        System.out.println(tasksPage.getNumberOfElements());
         model.addAttribute("tasks", tasksPage.getContent());
         model.addAttribute("pageNumber", tasksPage.getNumber());
         model.addAttribute("pageCount", tasksPage.getTotalPages());
+        model.addAttribute("tasksCount", tasksPage.getNumberOfElements());
         return "todo-list";
     }
 
@@ -61,16 +66,25 @@ public class TaskController {
             @NotNull Long id,
             @Parameter(description = "номер страницы, начиная с нуля")
             @RequestParam(name = "pageNumber", defaultValue = "0")
-            @Min(value = 0, message = "The value must be positive or 0") int pageNumber,
+            @Min(value = 0, message = "The value must be positive or 0")
+            int pageNumber,
             @Parameter(description = "количество тасков на странице")
             @RequestParam(name = "pageSize", defaultValue = "5")
-            @Min(value = 1, message = "The value must be 1 and greater") int pageSize,
+            @Min(value = 1, message = "The value must be 1 and greater")
+            int pageSize,
             @Parameter(description = "сортировка параметров таска")
-            @RequestParam(name = "sortBy", defaultValue = "id")
-            @Pattern(regexp = "(id|description|status)", message = "The value must be \"id\", or \"description\", or \"status\"") String sortBy,
+            @RequestParam(name = "sortBy", defaultValue = DEFAUL_SORT_BY)
+            @Pattern(regexp = "(id|description|status)", message = "The value must be \"id\", or \"description\", or \"status\"")
+            String sortBy,
+            @Parameter(description = "айди таска")
+            @RequestParam(name = "tasksCount")
+            @Min(value = 0, message = "The value must be positive or 0")
+            @NotNull Integer tasksCount,
             Model model) {
         taskService.delteById(id);
-        return getTodoList(pageNumber, 5, "id", model);
+        return tasksCount > 1 ? getTodoList(pageNumber, DEFAUL_PAGE_SIZE, DEFAUL_SORT_BY, model)
+                : getTodoList(pageNumber - 1, DEFAUL_PAGE_SIZE, DEFAUL_SORT_BY, model);
+
     }
 
     @GetMapping("/edit/{id}")
@@ -110,6 +124,6 @@ public class TaskController {
             taskDto.setId(id);
             return showUpdateForm(id, pageNumber, model);
         }
-        return getTodoList(pageNumber, 5, "id", model);
+        return getTodoList(pageNumber, DEFAUL_PAGE_SIZE, DEFAUL_SORT_BY, model);
     }
 }

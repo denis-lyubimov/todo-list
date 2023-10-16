@@ -1,3 +1,3 @@
 FROM tomcat
 
-COPY /target/root.war /usr/local/tomcat/webapps/
+COPY /target/todo-list.jar /usr/local/tomcat/webapps/
