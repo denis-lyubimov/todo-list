@@ -82,8 +82,8 @@ public class TaskController {
             @NotNull Integer tasksCount,
             Model model) {
         taskService.delteById(id);
-        return tasksCount > 1 ? getTodoList(pageNumber, DEFAUL_PAGE_SIZE, DEFAUL_SORT_BY, model)
-                : getTodoList(pageNumber - 1, DEFAUL_PAGE_SIZE, DEFAUL_SORT_BY, model);
+        return (tasksCount == 1 && pageNumber != 0) ? getTodoList(pageNumber-1, DEFAUL_PAGE_SIZE, DEFAUL_SORT_BY, model)
+                : getTodoList(pageNumber, DEFAUL_PAGE_SIZE, DEFAUL_SORT_BY, model);
 
     }
 
