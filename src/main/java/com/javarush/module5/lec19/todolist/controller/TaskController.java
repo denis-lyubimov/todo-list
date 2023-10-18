@@ -3,6 +3,7 @@ package com.javarush.module5.lec19.todolist.controller;
 
 import com.javarush.module5.lec19.todolist.dto.TaskDto;
 import com.javarush.module5.lec19.todolist.exception.NothingToChangeExcpetion;
+import com.javarush.module5.lec19.todolist.mapper.impl.TaskMapper;
 import com.javarush.module5.lec19.todolist.service.TaskService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,12 +28,14 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "контроллер для таска", description = "crud для thymeleaf")
 public class TaskController {
     private final TaskService taskService;
+    private final TaskMapper taskMapper;
     private final static Integer DEFAUL_PAGE_SIZE = 5;
     private final static String DEFAUL_SORT_BY = "id";
 
     @Autowired
-    public TaskController(TaskService taskService) {
+    public TaskController(TaskService taskService, TaskMapper taskMapper) {
         this.taskService = taskService;
+        this.taskMapper = taskMapper;
     }
 
     @GetMapping
@@ -49,7 +52,6 @@ public class TaskController {
             @Pattern(regexp = "(id|description|status)", message = "The value must be \"id\", or \"description\", or \"status\"") String sortBy,
             Model model) {
         Page<TaskDto> tasksPage = taskService.getTasksByPage(pageNumber, pageSize, sortBy);
-        System.out.println(tasksPage.getNumberOfElements());
         model.addAttribute("tasks", tasksPage.getContent());
         model.addAttribute("pageNumber", tasksPage.getNumber());
         model.addAttribute("pageCount", tasksPage.getTotalPages());
@@ -82,21 +84,21 @@ public class TaskController {
             @NotNull Integer tasksCount,
             Model model) {
         taskService.delteById(id);
-        return (tasksCount == 1 && pageNumber != 0) ? getTodoList(pageNumber-1, DEFAUL_PAGE_SIZE, DEFAUL_SORT_BY, model)
+        return (tasksCount == 1 && pageNumber != 0) ? getTodoList(pageNumber - 1, DEFAUL_PAGE_SIZE, DEFAUL_SORT_BY, model)
                 : getTodoList(pageNumber, DEFAUL_PAGE_SIZE, DEFAUL_SORT_BY, model);
 
     }
 
     @GetMapping("/edit/{id}")
     @Operation(summary = "перекидывает в редактирование таска")
-    public String showUpdateForm(@Parameter(description = "айди таска")
-                                 @PathVariable("id")
-                                 @Min(value = 0, message = "The value must be positive or 0")
-                                 @NotNull Long id,
-                                 @Parameter(description = "номер страницы, начиная с нуля")
-                                 @RequestParam(name = "pageNumber", defaultValue = "0")
-                                 @Min(value = 0, message = "The value must be positive or 0") int pageNumber,
-                                 Model model) {
+    public String showUpdateTaskForm(@Parameter(description = "айди таска")
+                                     @PathVariable("id")
+                                     @Min(value = 0, message = "The value must be positive or 0")
+                                     @NotNull Long id,
+                                     @Parameter(description = "номер страницы, начиная с нуля")
+                                     @RequestParam(name = "pageNumber", defaultValue = "0")
+                                     @Min(value = 0, message = "The value must be positive or 0") int pageNumber,
+                                     Model model) {
         TaskDto taskDto = taskService.findById(id);
         model.addAttribute("task", taskDto);
         model.addAttribute("pageNumber", pageNumber);
@@ -116,14 +118,26 @@ public class TaskController {
                              BindingResult result, Model model) {
         if (result.hasErrors()) {
             taskDto.setId(id);
-            return showUpdateForm(id, pageNumber, model);
+            return showUpdateTaskForm(id, pageNumber, model);
         }
         try {
             taskService.updateById(id, taskDto);
         } catch (NothingToChangeExcpetion e) {
             taskDto.setId(id);
-            return showUpdateForm(id, pageNumber, model);
+            return showUpdateTaskForm(id, pageNumber, model);
         }
         return getTodoList(pageNumber, DEFAUL_PAGE_SIZE, DEFAUL_SORT_BY, model);
     }
+
+    @PostMapping("/addtask")
+    @Operation(summary = "добавляет новый таск")
+    public String addTask(@Parameter(description = "номер страницы, начиная с нуля")
+                          @RequestParam(name = "pageNumber", defaultValue = "0")
+                          @Min(value = 0, message = "The value must be positive or 0") int pageNumber,
+                          @ModelAttribute("task") @Valid TaskDto taskDto,
+                          Model model) {
+        taskService.create(taskMapper.dtoToEntity(taskDto));
+        return getTodoList(pageNumber,DEFAUL_PAGE_SIZE, DEFAUL_SORT_BY, model);
+    }
+
 }

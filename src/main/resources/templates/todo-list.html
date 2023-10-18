@@ -58,6 +58,17 @@
             </li>
         </ul>
     </nav>
+    <form th:action="@{/todo-list/addtask((pageNumber=${pageNumber}))}" method="POST" modelAttribute="task">
+        <label for="description">Description: </label>
+        <input name="description" id="description"/>
+        <label for="status">Status: </label>
+        <select name="status" id="status">
+            <option value="DONE">DONE</option>
+            <option value="IN_PROGRESS">IN_PROGRESS</option>
+            <option value="PAUSED">PAUSED</option>
+        </select>
+        <input type="submit" class="btn btn-success" value="Add task"/>
+    </form>
 </div>
 </body>
 </html>

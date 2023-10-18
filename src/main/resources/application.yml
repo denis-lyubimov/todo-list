@@ -11,7 +11,7 @@ spring:
       maximum-pool-size: 5
       connection-timeout: 600000
     username: root
-    password: passwd
+    password: r12xVa_hwe
   jpa:
     show-sql: true
     hibernate:
