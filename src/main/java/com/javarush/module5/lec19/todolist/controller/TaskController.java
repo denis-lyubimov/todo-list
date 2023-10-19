@@ -38,6 +38,8 @@ public class TaskController {
         this.taskMapper = taskMapper;
     }
 
+
+
     @GetMapping
     @Operation(summary = "возвращает страницу с тудулистом")
     public String getTodoList(
@@ -115,7 +117,8 @@ public class TaskController {
                              @RequestParam(name = "pageNumber", defaultValue = "0")
                              @Min(value = 0, message = "The value must be positive or 0") int pageNumber,
                              @Valid TaskDto taskDto,
-                             BindingResult result, Model model) {
+                             BindingResult result,
+                             Model model) {
         if (result.hasErrors()) {
             taskDto.setId(id);
             return showUpdateTaskForm(id, pageNumber, model);
@@ -137,7 +140,7 @@ public class TaskController {
                           @ModelAttribute("task") @Valid TaskDto taskDto,
                           Model model) {
         taskService.create(taskMapper.dtoToEntity(taskDto));
-        return getTodoList(pageNumber,DEFAUL_PAGE_SIZE, DEFAUL_SORT_BY, model);
+        return getTodoList(pageNumber, DEFAUL_PAGE_SIZE, DEFAUL_SORT_BY, model);
     }
 
 }

@@ -30,4 +30,20 @@ INSERT  IGNORE INTO `task` VALUES
     (14,'ooo','PAUSED'),
     (15,'ppp','IN_PROGRESS');
 /*!40000 ALTER TABLE `task` ENABLE KEYS */;
+    INSERT  IGNORE INTO `task` VALUES
+    (1,'aaa','IN_PROGRESS'),
+    (2,'bbb','PAUSED'),
+    (3,'ccc','IN_PROGRESS'),
+    (4,'ddd','DONE'),
+    (5,'eee','PAUSED'),
+    (6,'fff','IN_PROGRESS'),
+    (7,'ggg','DONE'),
+    (8,'hhh','PAUSED'),
+    (9,'jjj','IN_PROGRESS'),
+    (10,'kkk','DONE'),
+    (11,'lll','PAUSED'),
+    (12,'mmm','IN_PROGRESS'),
+    (13,'nnn','DONE'),
+    (14,'ooo','PAUSED'),
+    (15,'ppp','IN_PROGRESS');
 UNLOCK TABLES;

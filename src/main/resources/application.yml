@@ -1,4 +1,8 @@
 spring:
+#  security:
+#    user:
+#      password: 12345
+#      name: user1
   mvc:
     hiddenmethod:
       filter:
@@ -11,7 +15,7 @@ spring:
       maximum-pool-size: 5
       connection-timeout: 600000
     username: root
-    password: r12xVa_hwe
+    password: passwd
   jpa:
     show-sql: true
     hibernate:
